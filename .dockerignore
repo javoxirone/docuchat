@@ -1,10 +1,36 @@
 .git
 .gitignore
+
+# Local settings and secrets
 .env
-.venv
-__pycache__
-.pytest_cache
-.ruff_cache
-.idea
-.vscode
-storage/documents
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local Python environments and generated files
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage*
+htmlcov/
+
+# IDE/OS and build output
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+build/
+dist/
+*.egg-info/
+
+# User uploads should not be baked into the image
+storage/documents/

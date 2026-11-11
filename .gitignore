@@ -1,14 +1,52 @@
+# Environment variables and secrets
 .env
-venv
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python environments and bytecode
 .venv/
+venv/
+env/
+ENV/
 __pycache__/
 *.py[cod]
+*$py.class$
+
+# Test, lint, type-check, and coverage output
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
+.pyre/
+.tox/
+.nox/
 .coverage
+.coverage.*
 htmlcov/
+coverage.xml
+
+# Build and packaging output
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Local databases and logs
+*.sqlite
+*.sqlite3
+*.db
+*.log
+
+# IDE and operating-system files
 .idea/
 .vscode/
+.DS_Store
+Thumbs.db
+
+# Uploaded/generated document data; keep the directory placeholder
 storage/documents/*
 !storage/documents/.gitkeep

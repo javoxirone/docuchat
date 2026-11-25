@@ -13,7 +13,7 @@ class DocumentService:
     def __init__(self, repository):
         self.repository = repository
 
-    async def create_document(self, raw_document: RawDocument) -> Any:
+    async def create_document(self, raw_document: RawDocument) -> Document:
         original_filename = raw_document.filename
         file_type = get_file_extension(raw_document.filename)
         mime_type = raw_document.content_type
@@ -29,6 +29,17 @@ class DocumentService:
             error_code=None,  # This should be updated with the actual error code if applicable
         )
         return await self.repository.create_document(document)
+
+    async def get_or_create_document(self, raw_document: RawDocument) -> Document:
+        checksum_sha256 = sha256(raw_document.content).hexdigest()
+        existing_document = await self.repository.get_document_by_checksum(checksum_sha256)
+        if existing_document:
+            return existing_document
+        else:
+            return await self.create_document(raw_document)
+
+    async def get_documents(self) -> list[Document]:
+        return await self.repository.get_documents()
 
 
 async def get_document_service(

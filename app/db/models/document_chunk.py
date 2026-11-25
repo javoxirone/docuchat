@@ -1,9 +1,15 @@
 import uuid
 from datetime import datetime
 
+# the value is False at runtime, but True while type checking
+from typing import TYPE_CHECKING
+
 from pgvector.sqlalchemy import VECTOR
-from sqlalchemy import UUID, DateTime, ForeignKey, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import UUID, DateTime, ForeignKey, Index, Integer, String, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from app.db.models.document import Document
 
 from app.db.base import Base
 
@@ -11,7 +17,17 @@ from app.db.base import Base
 class DocumentChunk(Base):
     __tablename__ = "document_chunks"
 
+    __table_args__ = (
+        UniqueConstraint(
+            "document_id", "chunk_index", name="uq_document_chunks_document_id_and_chunk_index"
+        ),
+        Index("ix_document_chunks_document_id", "document_id"),
+    )
+
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+
+    document: Mapped["Document"] = relationship(back_populates="chunks")
+
     document_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("documents.id", ondelete="CASCADE"), nullable=False
     )
